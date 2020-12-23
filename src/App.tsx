@@ -1,4 +1,4 @@
-import WindowWidth from './Components/WindowWidth'
+import ImageTable from './Components/ImageTable'
 
 function App() {
   return (
@@ -6,7 +6,7 @@ function App() {
       <header className="App-header">
         Twi-Image-Museum
       </header>
-      <WindowWidth/>
+      <ImageTable/>
     </div>
   );
 }
