@@ -13,7 +13,7 @@ class ImageList extends React.Component<typeImageListProps> {
               {items.map((item: any, j: number) => {
                 return (
                   <div className="max-w-xs m-1" key={j} >
-                    <ListItem url={item.url}/>
+                    <ListItem url={item.url} source={item.source}/>
                   </div>
                 );
                 })}
@@ -35,5 +35,5 @@ class ImageList extends React.Component<typeImageListProps> {
 export default ImageList
 
 function ListItem(props: any) {
-  return <img src={props.url} alt=""/>;
+  return <a href={props.source} target="_blank" rel="noopener noreferrer"><img src={props.url} alt=""/></a>;
 }

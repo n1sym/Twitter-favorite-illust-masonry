@@ -4,16 +4,43 @@ import ImageList from './ImageList'
 
 type typeImageTableState = {
   raneItems: any[]
+  loading: string
+  screen_name: string
+  max_id: string
 }
 
-let items: any[] = []
-const imageHeightList: { url: string; height: number; }[] = []
+let items: any = {}
+const imageHeightList: { url: string; height: number; source: string}[] = []
 const RaneItems: any[] = []
 
 class ImageTable extends React.Component<{}, typeImageTableState> {
   constructor(props: any) {
     super(props);
-    this.state = {raneItems: []};
+    this.state = {
+      raneItems: [],
+      loading: '',
+      screen_name: '',
+      max_id: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event: { target: any; }) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    let partialState: any = {};
+    partialState[name] = value;
+    this.setState(partialState);
+  }
+
+  handleSubmit(event: any) {
+    this.setState({loading: 'loading...'});
+    console.log(this.state)
+    this.getiine()
+    event.preventDefault();
   }
   async componentDidMount () {
     let queue: NodeJS.Timeout
@@ -25,20 +52,40 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     })
   }
   getiine = async() => {
-    const images = await apitest()
+    const images = await apitest(this.state.screen_name, this.state.max_id)
+    console.log(images)
     items = images
-    this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
+    this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300)), max_id: items.max_id})
     setTimeout(()=>{
       this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
     },500)
+    this.setState({loading: ''});
+    setTimeout(()=>{
+      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
+    },1500)
+    setTimeout(()=>{
+      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
+    },10500)
+    setTimeout(()=>{
+      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
+    },25500)
   }
   render() {
     return (
       <div>
-        <button  onClick={this.getiine}>
-          get
-        </button>
         <ImageList raneItems={this.state.raneItems}/>
+        <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" name="screen_name" value={this.state.screen_name} onChange={this.handleChange} />
+        </label>
+        <label>
+          Max_id:
+          <input type="text" name="max_id" value={this.state.max_id} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+        </form>
+        {this.state.loading}
       </div>
     );
   }
@@ -64,25 +111,25 @@ function createRaneItems(rane_num: number){
     RaneItems.push([])
   }
   const RaneHeights = Array(rane_num).fill(0)
-  items.forEach((item) => {
+  items.url.forEach((item: any, index: number) => {
     const img = new Image();
     img.src = item;
-    imageHeightList.push({url: item, height: img.height / img.width})
+    imageHeightList.push({url: item, source: items.source[index], height: img.height / img.width})
   });
   console.log(imageHeightList)
   imageHeightList.forEach((item)=>{
     const minHeightIndex = searchMinHeightIndex(RaneHeights)
     RaneHeights[minHeightIndex] += item.height
-    RaneItems[minHeightIndex].push({url: item.url})
+    RaneItems[minHeightIndex].push({url: item.url, source: item.source})
   })
   console.log(RaneHeights)
   return RaneItems
 }
 
-async function apitest(){
+async function apitest(screen_name: string, max_id: string){
   const needle = require("needle");
   const endpointURL =
-    "https://script.google.com/macros/s/AKfycbw98DaYWPjHs7L7YREK4rs12inXiM-y-G9dTU1uGWMChqLaXlhX/exec";
+    "https://script.google.com/macros/s/AKfycbw98DaYWPjHs7L7YREK4rs12inXiM-y-G9dTU1uGWMChqLaXlhX/exec?text=" + screen_name + "&id=" + max_id;
   const res = await needle("get", endpointURL);
     if (res.body) {
       return res.body.message;
