@@ -7,14 +7,43 @@ class App extends React.Component {
   return (
     <div className="container mx-auto">
       <div className="application">
-            <Helmet>
-                <meta charSet="utf-8" />
-                <title>twi-iine-museum</title>
-                <meta name="twitter:title" content="twi-iine-museum"/>
-                <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/hukurouo.appspot.com/o/image%2Fwh.png?alt=media&token=5adfeea7-d45b-463e-b2f4-edceae1ab06e"/>
-                <meta name="twitter:card" content="summary"/>
-                <meta name="twitter:image" content="https://firebasestorage.googleapis.com/v0/b/hukurouo.appspot.com/o/image%2Fwh.png?alt=media&token=5adfeea7-d45b-463e-b2f4-edceae1ab06e"></meta>
-            </Helmet>
+      <Helmet
+      title="twi-iine-museum"
+      meta={[
+        {
+          name: `description`,
+          content: "いいねした画像を並べるやつ",
+        },
+        {
+          property: `og:title`,
+          content: "twi-iine-museum",
+        },
+        {
+          property: `og:description`,
+          content: "いいねした画像を並べるやつ",
+        },
+        {
+          property: `og:type`,
+          content: `website`,
+        },
+        {
+          name: `twitter:card`,
+          content: `summary`,
+        },
+        {
+          name: `twitter:creator`,
+          content: "hukurouo",
+        },
+        {
+          name: `twitter:title`,
+          content: "twi-iine-museum",
+        },
+        {
+          name: `twitter:description`,
+          content: "いいねした画像を並べるやつ",
+        },
+      ]}
+    />
         </div>
       <header className="App-header">
         Twi-Image-Museum
