@@ -95,7 +95,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
                  className="bg-white focus:outline-none focus:shadow-outline rounded-r-md py-2 px-2"
           />
         </div>
-        <input type="submit" value="取得" disabled={this.state.screen_name === ''} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-r w-20 mx-auto" />
+        <input type="submit" value="取得" disabled={this.state.screen_name === ''} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-l w-20 mx-auto" />
         </form>
 
         <ImageList raneItems={this.state.raneItems}/>
