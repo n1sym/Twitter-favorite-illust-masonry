@@ -31,7 +31,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
   }
 
   handleSubmit(event: any) {
-    this.setState({loading: 'loading...', screen_name: this.state.screen_name.replace("@","")});
+    this.setState({loading: 'loading...', screen_name: this.state.screen_name.replace("@","").replace(" ","")});
     console.log(this.state)
     this.getiine()
     event.preventDefault();
@@ -83,7 +83,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
         </div>
         <div className="flex justify-center mb-5">
         <label>
-          <input type="text" 
+          <input type="email" 
                  name="screen_name" 
                  placeholder="hukurouo" 
                  value={this.state.screen_name} 
