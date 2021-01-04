@@ -81,6 +81,10 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
         <div className="flex justify-center mb-5 mx-5">
           <p>twitterのスクリーンネームを入力してください (例：@hukurouo) </p>
         </div>
+        <div className="flex mb-5 mx-auto max-w-xs">
+    <span className="text-sm border border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">@</span>
+    <input name="field_name" className="border border-2 rounded-r px-4 py-2 w-full" type="text" placeholder="Write something here..." />
+</div>
         <div className="flex justify-center mb-5 mx-auto max-w-xs">
                   <span className="inline-flex bg-gray-100 items-center px-2 rounded-l-md bg-gray-50 text-gray-500 text-sm">
                     @
@@ -95,7 +99,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
                  className="bg-white focus:outline-none focus:shadow-outline rounded-r-md py-2 px-2"
           />
         </div>
-        <input type="submit" value="取得" disabled={this.state.screen_name === ''} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-l w-20 mx-auto" />
+        <input type="submit" value="取得" disabled={this.state.screen_name === ''} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded w-20 mx-auto" />
         </form>
 
         <ImageList raneItems={this.state.raneItems}/>
