@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ImageList from './ImageList'
+import axios from 'axios';
 
 type typeImageTableState = {
   raneItems: any[]
@@ -109,12 +110,11 @@ function createRaneItems(rane_num: number){
 }
 
 async function apitest(screen_name: string, max_id: string){
-  const needle = require("needle");
-  const endpointURL =
-    "https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav/" + screen_name
-  const res = await needle("get", endpointURL);
-    if (res.body) {
-      return res.body;
+  const res = await axios.get(
+    `${'https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav'}/${screen_name}`
+  );
+    if (res.data) {
+      return res.data;
     } else {
       throw new Error("Unsuccessful request");
     }
