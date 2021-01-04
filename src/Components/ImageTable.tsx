@@ -53,7 +53,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       scqueue = setTimeout(()=>{
         const scroll_Y = document.documentElement.scrollTop + window.innerHeight
         const offsetHeight = document.documentElement.offsetHeight
-        if (offsetHeight - scroll_Y <= 200 && this.state.loading !== 'loading...'){
+        if (offsetHeight - scroll_Y <= 200 && this.state.loading !== 'loading...' && offsetHeight > 1500){
           this.setState({loading: 'loading...'})
           this.getiine()
         }
@@ -91,12 +91,12 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
                  className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full leading-normal"
           />
         </label>
-        <input type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-24 ml-3" />
+        <input type="submit" value="Submit" disabled={this.state.screen_name === ''} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-24 ml-3" />
         </div>
         </form>
 
         <ImageList raneItems={this.state.raneItems}/>
-        <div className="box h-64 text-center w-full m-5 p-4 ...">
+        <div className="box h-64 text-center m-5 p-4 ...">
           {this.state.loading}
         </div>
       </div>
