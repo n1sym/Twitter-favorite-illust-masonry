@@ -9,8 +9,14 @@ type typeImageTableState = {
   max_id: string
 }
 
-let items: any = {}
-const imageHeightList: { url: string; height: number; source: string;}[] = []
+type typeItems = {
+  url: string[]
+  height: number[]
+  source: string[]
+  max_id: string
+}
+
+let items: typeItems = {url: [], height: [], source: [], max_id: ''}
 const RaneItems: any[] = []
 
 class ImageTable extends React.Component<{}, typeImageTableState> {
@@ -60,7 +66,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
           document.documentElement.scrollTop + window.innerHeight;
         const offsetHeight = document.documentElement.offsetHeight;
         if (
-          offsetHeight - scroll_Y <= 500 &&
+          offsetHeight - scroll_Y <= 1000 &&
           this.state.loading !== "loading..." &&
           offsetHeight > 1500
         ) {
@@ -142,7 +148,6 @@ function searchMinHeightIndex(array: number[]){
 
 function createRaneItems(rane_num: number){
   RaneItems.length = 0
-  imageHeightList.length = 0
   for (let i=0; i<rane_num; i++){
     RaneItems.push([])
   }
