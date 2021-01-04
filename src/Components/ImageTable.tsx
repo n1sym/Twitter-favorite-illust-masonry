@@ -82,21 +82,20 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
           <p>twitterのスクリーンネームを入力してください (例：@hukurouo) </p>
         </div>
         <div className="flex justify-center mb-5 mx-auto max-w-xs">
-                  <span className="inline-flex w-1/12 bg-gray-100 items-center px-2 rounded-l-md bg-gray-50 text-gray-500 text-sm">
+                  <span className="inline-flex bg-gray-100 items-center px-2 rounded-l-md bg-gray-50 text-gray-500 text-sm">
                     @
                   </span>
           <input type="text"
-                 inputMode="url"
+                 inputMode="email"
                  autoCapitalize="off"
                  name="screen_name"
                  placeholder="hukurouo" 
                  value={this.state.screen_name} 
                  onChange={this.handleChange} 
-                 className="bg-white focus:outline-none focus:shadow-outline rounded-r-md py-2 px-2 block w-full leading-normal"
+                 className="bg-white focus:outline-none focus:shadow-outline rounded-r-md py-2 px-2"
           />
-        
-        <input type="submit" value="Submit" disabled={this.state.screen_name === ''} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded w-24 ml-2" />
         </div>
+        <input type="submit" value="取得" disabled={this.state.screen_name === ''} className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded w-20 mx-auto" />
         </form>
 
         <ImageList raneItems={this.state.raneItems}/>
