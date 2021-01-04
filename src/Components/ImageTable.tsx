@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ImageList from './ImageList'
 import axios from 'axios';
@@ -27,18 +26,12 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event: { target: any; }) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    let partialState: any = {};
-    partialState[name] = value;
-    this.setState(partialState);
+  handleChange(event: { target: {value: string} }) {
+    this.setState({screen_name: event.target.value});
   }
 
   handleSubmit(event: any) {
-    this.setState({loading: 'loading...'});
+    this.setState({loading: 'loading...', screen_name: this.state.screen_name.replace("@","")});
     console.log(this.state)
     this.getiine()
     event.preventDefault();
@@ -49,32 +42,63 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     window.addEventListener('resize', () => {
       clearTimeout(queue);
       queue = setTimeout(()=>{
-        this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
+        const innerWidth = window.innerWidth
+        const windowWidth = (innerWidth>500) ? Math.floor(innerWidth/300) : 2
+        if (!!items.url){this.setState({raneItems: createRaneItems(windowWidth)})}
+      },500)
+    })
+    let scqueue: NodeJS.Timeout
+    window.addEventListener('scroll', () => {
+      clearTimeout(scqueue);
+      scqueue = setTimeout(()=>{
+        const scroll_Y = document.documentElement.scrollTop + window.innerHeight
+        const offsetHeight = document.documentElement.offsetHeight
+        if (offsetHeight - scroll_Y <= 200 && this.state.loading !== 'loading...'){
+          this.setState({loading: 'loading...'})
+          this.getiine()
+        }
       },500)
     })
   }
   getiine = async() => {
     const images = await apitest(this.state.screen_name, this.state.max_id)
     console.log(images)
-    items = images
-    this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300)), max_id: items.max_id})
+    if (items.url) {
+      items.url = items.url.concat(images.url)
+      items.height = items.height.concat(images.height)
+      items.source = items.source.concat(images.source)
+    } else {
+      items = images
+    }
+    const innerWidth = window.innerWidth
+    const windowWidth = (innerWidth>500) ? Math.floor(innerWidth/300) : 2
+    this.setState({raneItems: createRaneItems(windowWidth), max_id: images.max_id, loading: ''})
   }
   render() {
     return (
       <div>
-        <ImageList raneItems={this.state.raneItems}/>
         <form onSubmit={this.handleSubmit}>
+        <div className="flex justify-center mb-5 mx-5">
+          <p>twitterのスクリーンネームを入力してください (例：@hukurouo) </p>
+        </div>
+        <div className="flex justify-center mb-5">
         <label>
-          Name:
-          <input type="text" name="screen_name" value={this.state.screen_name} onChange={this.handleChange} />
+          <input type="text" 
+                 name="screen_name" 
+                 placeholder="hukurouo" 
+                 value={this.state.screen_name} 
+                 onChange={this.handleChange} 
+                 className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full leading-normal"
+          />
         </label>
-        <label>
-          Max_id:
-          <input type="text" name="max_id" value={this.state.max_id} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-24 ml-3" />
+        </div>
         </form>
-        {this.state.loading}
+
+        <ImageList raneItems={this.state.raneItems}/>
+        <div className="box h-64 text-center w-full m-5 p-4 ...">
+          {this.state.loading}
+        </div>
       </div>
     );
   }
@@ -110,9 +134,11 @@ function createRaneItems(rane_num: number){
 }
 
 async function apitest(screen_name: string, max_id: string){
-  const res = await axios.get(
-    `${'https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav'}/${screen_name}`
-  );
+  let endpoint = 'https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav/' + screen_name
+  if (max_id){
+    endpoint += '/' + max_id
+  }
+  const res = await axios.get(endpoint);
     if (res.data) {
       return res.data;
     } else {

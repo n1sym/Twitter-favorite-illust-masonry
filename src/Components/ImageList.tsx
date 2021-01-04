@@ -6,16 +6,23 @@ type typeImageListProps = {
 class ImageList extends React.Component<typeImageListProps> {
   listItems = (itemsArrays: any) => {
     return(
-      <div className="flex">
+      <div className="flex m-1">
         {itemsArrays.map((items: any, i: number) => {
           return (
             <div className="flex flex-col" key={i}>
               {items.map((item: any, j: number) => {
                 return (
-                  <div className="max-w-xs m-1" key={j} >
-                    <ListItem url={item.url} source={item.source}/>
+                  <div key={j} >
+                    {window.innerWidth >= 500
+                      ? <div className="max-w-xs m-1">
+                          <ListItem url={item.url} source={item.source}/>
+                        </div>
+                      : <div className="m-1">
+                          <ListItem url={item.url} source={item.source}/>
+                      </div>
+                    }
                   </div>
-                );
+                );           
                 })}
             </div>
           );
