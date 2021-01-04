@@ -99,7 +99,10 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       <div>
         <form onSubmit={this.handleSubmit}>
           <div className="flex justify-center mb-5 mx-5">
-            <p>twitterのスクリーンネームを入力してください（例：@hukurouo）</p>
+            <p className="md-5">twitterのスクリーンネームを入力してください（例：@hukurouo）
+            <br/><br/>
+            その人がいいねした画像が良い感じに表示されます。
+            </p>
           </div>
           <div className="flex mb-5 mx-auto max-w-xs">
             <div className="mt-1 relative rounded-md shadow-sm mx-5 w-11/12">
