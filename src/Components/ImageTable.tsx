@@ -10,7 +10,7 @@ type typeImageTableState = {
 }
 
 let items: any = {}
-const imageHeightList: { url: string; height: number; source: string}[] = []
+const imageHeightList: { url: string; height: number; source: string;}[] = []
 const RaneItems: any[] = []
 
 class ImageTable extends React.Component<{}, typeImageTableState> {
@@ -42,6 +42,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     this.getiine()
     event.preventDefault();
   }
+
   async componentDidMount () {
     let queue: NodeJS.Timeout
     window.addEventListener('resize', () => {
@@ -56,19 +57,6 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     console.log(images)
     items = images
     this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300)), max_id: items.max_id})
-    setTimeout(()=>{
-      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
-    },500)
-    this.setState({loading: ''});
-    setTimeout(()=>{
-      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
-    },1500)
-    setTimeout(()=>{
-      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
-    },10500)
-    setTimeout(()=>{
-      this.setState({raneItems: createRaneItems(Math.floor(window.innerWidth/300))})
-    },25500)
   }
   render() {
     return (
@@ -111,16 +99,10 @@ function createRaneItems(rane_num: number){
     RaneItems.push([])
   }
   const RaneHeights = Array(rane_num).fill(0)
-  items.url.forEach((item: any, index: number) => {
-    const img = new Image();
-    img.src = item;
-    imageHeightList.push({url: item, source: items.source[index], height: img.height / img.width})
-  });
-  console.log(imageHeightList)
-  imageHeightList.forEach((item)=>{
+  items.url.forEach((item: any, index: number)=>{
     const minHeightIndex = searchMinHeightIndex(RaneHeights)
-    RaneHeights[minHeightIndex] += item.height
-    RaneItems[minHeightIndex].push({url: item.url, source: item.source})
+    RaneHeights[minHeightIndex] += items.height[index]
+    RaneItems[minHeightIndex].push({url: item, source: items.source[index]})
   })
   console.log(RaneHeights)
   return RaneItems
@@ -129,10 +111,10 @@ function createRaneItems(rane_num: number){
 async function apitest(screen_name: string, max_id: string){
   const needle = require("needle");
   const endpointURL =
-    "https://script.google.com/macros/s/AKfycbw98DaYWPjHs7L7YREK4rs12inXiM-y-G9dTU1uGWMChqLaXlhX/exec?text=" + screen_name + "&id=" + max_id;
+    "https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav/" + screen_name
   const res = await needle("get", endpointURL);
     if (res.body) {
-      return res.body.message;
+      return res.body;
     } else {
       throw new Error("Unsuccessful request");
     }
