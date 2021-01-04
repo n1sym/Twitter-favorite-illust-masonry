@@ -42,6 +42,11 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       screen_name: this.state.screen_name.replace("@", "").replace(" ", ""),
     });
     console.log(this.state);
+    setTimeout(() => {
+      if (this.state.loading === "loading...") {
+        this.setState({ loading: "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。" });
+      }
+    }, 5000);
     this.getiine();
     event.preventDefault();
   }
@@ -93,6 +98,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       max_id: images.max_id,
       loading: "",
     });
+    
   };
   render() {
     return (
@@ -173,7 +179,7 @@ async function apitest(screen_name: string, max_id: string){
     if (res.data) {
       return res.data;
     } else {
-      throw new Error("Unsuccessful request");
+      return "error"
     }
 }
 
