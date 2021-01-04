@@ -102,7 +102,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
             <p>twitterのスクリーンネームを入力してください（例：@hukurouo）</p>
           </div>
           <div className="flex mb-5 mx-auto max-w-xs">
-            <div className="mt-1 relative rounded-md shadow-sm mx-5 w-full">
+            <div className="mt-1 relative rounded-md shadow-sm mx-5 w-11/12">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="text-gray-500 sm:text-sm">@</span>
               </div>
