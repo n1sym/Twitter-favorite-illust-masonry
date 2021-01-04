@@ -83,7 +83,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
         </div>
         <div className="flex justify-center mb-5">
         <label>
-          <input type="email" 
+          <input type="search" 
                  name="screen_name" 
                  placeholder="hukurouo" 
                  value={this.state.screen_name} 
