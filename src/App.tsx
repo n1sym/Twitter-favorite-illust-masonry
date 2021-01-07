@@ -1,20 +1,22 @@
 import ImageTable from './Components/ImageTable'
 import React from "react";
-import {Helmet} from "react-helmet";
 import './App.css';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 class App extends React.Component {
   render () {
   return (
-    <div className="container mx-auto">
-      <div className="application">
-      <Helmet title="iineum"/>
-        </div>
-      <header className="App-header">
-        iineum
-      </header>
-      <ImageTable/>
-    </div>
+    <HelmetProvider>
+      <Helmet>
+        <title>iineum</title>
+      </Helmet>
+      <div className="container mx-auto">
+        <header className="App-header">
+          iineum
+        </header>
+        <ImageTable/>
+      </div>
+    </HelmetProvider>
   );
   }
 }

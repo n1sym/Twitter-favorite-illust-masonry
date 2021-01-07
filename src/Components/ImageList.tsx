@@ -1,6 +1,10 @@
 import React from 'react';
+type typeRaneItems = {
+  url: string
+  source: string
+}
 type typeImageListProps = {
-  raneItems: any[]
+  raneItems: typeRaneItems[][]
 }
 
 class ImageList extends React.Component<typeImageListProps> {

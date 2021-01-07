@@ -3,7 +3,7 @@ import ImageList from './ImageList'
 import axios from 'axios';
 
 type typeImageTableState = {
-  raneItems: any[]
+  raneItems: typeRaneItems[][]
   loading: string
   screen_name: string
   max_id: string
@@ -16,11 +16,15 @@ type typeItems = {
   max_id: string
 }
 
+type typeRaneItems = {
+  url: string
+  source: string
+}
+
 let items: typeItems = {url: [], height: [], source: [], max_id: ''}
-const RaneItems: any[] = []
 
 class ImageTable extends React.Component<{}, typeImageTableState> {
-  constructor(props: any) {
+  constructor(props: {}) {
     super(props);
     this.state = {
       raneItems: [],
@@ -33,15 +37,15 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
   }
 
   handleChange(event: { target: { value: string } }) {
+    items = {url: [], height: [], source: [], max_id: ''}
     this.setState({ screen_name: event.target.value });
   }
 
   handleSubmit(event: any) {
     this.setState({
       loading: "loading...",
-      screen_name: this.state.screen_name.replace("@", "").replace(" ", ""),
+      screen_name: this.state.screen_name.replace(" ", ""),
     });
-    console.log(this.state);
     setTimeout(() => {
       if (this.state.loading === "loading...") {
         this.setState({ loading: "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。" });
@@ -67,8 +71,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     window.addEventListener("scroll", () => {
       clearTimeout(scqueue);
       scqueue = setTimeout(() => {
-        const scroll_Y =
-          document.documentElement.scrollTop + window.innerHeight;
+        const scroll_Y = document.documentElement.scrollTop + window.innerHeight;
         const offsetHeight = document.documentElement.offsetHeight;
         if (
           offsetHeight - scroll_Y <= 1000 &&
@@ -81,8 +84,15 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       }, 500);
     });
   }
-  getiine = async () => {
-    const images = await apitest(this.state.screen_name, this.state.max_id);
+  getiine = () => {
+    apitest(this.state.screen_name, this.state.max_id).then((res) => {
+      this.setIineImages(res)
+    }).catch(()=>{
+      this.setState({ loading: "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。" });
+    })
+  };
+
+  setIineImages = (images: any) => {
     console.log(images);
     if (items.url) {
       items.url = items.url.concat(images.url);
@@ -91,6 +101,10 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     } else {
       items = images;
     }
+    if (items.url.length === 0) {
+      this.setState({ loading: "いいねした画像がありませんでした" })
+      return
+    }
     const innerWidth = window.innerWidth;
     const windowWidth = innerWidth > 500 ? Math.floor(innerWidth / 300) : 2;
     this.setState({
@@ -98,8 +112,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       max_id: images.max_id,
       loading: "",
     });
-    
-  };
+  }
   render() {
     return (
       <div>
@@ -125,14 +138,15 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
               />
             </div>
           </div>
+          <div className="flex justify-center mb-5 mx-5">
           <input
             type="submit"
             value="取得"
             disabled={this.state.screen_name === ""}
-            className="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded w-20 mx-auto mb-10"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 mx-2 rounded w-20 mb-10"
           />
+          </div>
         </form>
-
         <ImageList raneItems={this.state.raneItems} />
         <div className="box h-64 text-center m-5 p-4 ...">
           {this.state.loading}
@@ -155,8 +169,8 @@ function searchMinHeightIndex(array: number[]){
   return minIndex
 }
 
-function createRaneItems(rane_num: number){
-  RaneItems.length = 0
+function createRaneItems(rane_num: number): typeRaneItems[][]{
+  const RaneItems: typeRaneItems[][] = []
   for (let i=0; i<rane_num; i++){
     RaneItems.push([])
   }
@@ -170,18 +184,16 @@ function createRaneItems(rane_num: number){
   return RaneItems
 }
 
-async function apitest(screen_name: string, max_id: string){
+function apitest(screen_name: string, max_id: string){
   let endpoint = 'https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav/' + screen_name
   if (max_id){
     endpoint += '/' + max_id
   }
-  const res = await axios.get(endpoint);
-    if (res.data) {
-      return res.data;
-    } else {
-      return "error"
-    }
+  return new Promise((resolve, reject) => {
+    axios.get(endpoint).then((res) => {
+      resolve(res.data)
+    }).catch((err) => {
+      reject(err)
+    })
+  })
 }
-
-
-
