@@ -164,7 +164,9 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
             />
           </div>
         </form>
-        <ImageList raneItems={this.state.raneItems} />
+        <div className="flex justify-center">
+          <ImageList raneItems={this.state.raneItems} />
+        </div>
         <div className="box h-64 text-center m-5 p-4 ...">
           {this.state.loading}
         </div>
