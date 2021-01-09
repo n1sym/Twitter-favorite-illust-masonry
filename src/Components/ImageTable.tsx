@@ -1,27 +1,33 @@
-import React from 'react';
-import ImageList from './ImageList'
-import axios from 'axios';
+import React from "react";
+import ImageList from "./ImageList";
+import axios from "axios";
 
 type typeImageTableState = {
-  raneItems: typeRaneItems[][]
-  loading: string
-  screen_name: string
-  max_id: string
-}
+  raneItems: typeRaneItems[][];
+  loading: string;
+  screen_name: string;
+  max_id: string;
+};
 
 type typeItems = {
-  url: string[]
-  height: number[]
-  source: string[]
-  max_id: string
-}
+  url: string[];
+  height: number[];
+  source: string[];
+  max_id: string;
+};
 
 type typeRaneItems = {
-  url: string
-  source: string
-}
+  url: string;
+  source: string;
+};
 
-let items: typeItems = {url: [], height: [], source: [], max_id: ''}
+let items: typeItems = {
+  url: [],
+  height: [],
+  source: [],
+  max_id: "",
+};
+
 
 class ImageTable extends React.Component<{}, typeImageTableState> {
   constructor(props: {}) {
@@ -37,7 +43,7 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
   }
 
   handleChange(event: { target: { value: string } }) {
-    items = {url: [], height: [], source: [], max_id: ''}
+    items = { url: [], height: [], source: [], max_id: "" };
     this.setState({ screen_name: event.target.value });
   }
 
@@ -48,7 +54,10 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     });
     setTimeout(() => {
       if (this.state.loading === "loading...") {
-        this.setState({ loading: "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。" });
+        this.setState({
+          loading:
+            "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。",
+        });
       }
     }, 5000);
     this.getiine();
@@ -71,7 +80,8 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     window.addEventListener("scroll", () => {
       clearTimeout(scqueue);
       scqueue = setTimeout(() => {
-        const scroll_Y = document.documentElement.scrollTop + window.innerHeight;
+        const scroll_Y =
+          document.documentElement.scrollTop + window.innerHeight;
         const offsetHeight = document.documentElement.offsetHeight;
         if (
           offsetHeight - scroll_Y <= 1000 &&
@@ -85,11 +95,16 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     });
   }
   getiine = () => {
-    apitest(this.state.screen_name, this.state.max_id).then((res) => {
-      this.setIineImages(res)
-    }).catch(()=>{
-      this.setState({ loading: "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。" });
-    })
+    apitest(this.state.screen_name, this.state.max_id)
+      .then((res) => {
+        this.setIineImages(res);
+      })
+      .catch(() => {
+        this.setState({
+          loading:
+            "取得に失敗しました。データが空か、スクリーンネームが間違っているかもしれません。",
+        });
+      });
   };
 
   setIineImages = (images: any) => {
@@ -102,8 +117,8 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       items = images;
     }
     if (items.url.length === 0) {
-      this.setState({ loading: "いいねした画像がありませんでした" })
-      return
+      this.setState({ loading: "いいねした画像がありませんでした" });
+      return;
     }
     const innerWidth = window.innerWidth;
     const windowWidth = innerWidth > 500 ? Math.floor(innerWidth / 300) : 2;
@@ -112,15 +127,17 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
       max_id: images.max_id,
       loading: "",
     });
-  }
+  };
   render() {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <div className="flex justify-center mb-5 mx-5">
-            <p className="md-5">twitterのスクリーンネームを入力してください（例：@hukurouo）
-            <br/><br/>
-            その人がいいねした画像が良い感じに表示されます。
+            <p className="md-5">
+              twitterのスクリーンネームを入力してください（例：@hukurouo）
+              <br />
+              <br />
+              その人がいいねした画像が良い感じに表示されます。
             </p>
           </div>
           <div className="flex mb-5 mx-auto max-w-xs">
@@ -139,12 +156,12 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
             </div>
           </div>
           <div className="flex justify-center mb-5 mx-5">
-          <input
-            type="submit"
-            value="取得"
-            disabled={this.state.screen_name === ""}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 mx-2 rounded w-20 mb-10"
-          />
+            <input
+              type="submit"
+              value="取得"
+              disabled={this.state.screen_name === ""}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 mx-2 rounded w-20 mb-10"
+            />
           </div>
         </form>
         <ImageList raneItems={this.state.raneItems} />
@@ -155,45 +172,46 @@ class ImageTable extends React.Component<{}, typeImageTableState> {
     );
   }
 }
-export default ImageTable
+export default ImageTable;
 
-function searchMinHeightIndex(array: number[]){
-  let minIndex=0;
-  let minHeight=100000;
-  array.forEach((item, index)=>{
-    if(minHeight > item){
-      minIndex = index
-      minHeight = item
+function searchMinHeightIndex(array: number[]) {
+  let minIndex = 0;
+  let minHeight = 100000;
+  array.forEach((item, index) => {
+    if (minHeight > item) {
+      minIndex = index;
+      minHeight = item;
     }
-  })
-  return minIndex
+  });
+  return minIndex;
 }
 
-function createRaneItems(rane_num: number): typeRaneItems[][]{
-  const RaneItems: typeRaneItems[][] = []
-  for (let i=0; i<rane_num; i++){
-    RaneItems.push([])
+function createRaneItems(rane_num: number): typeRaneItems[][] {
+  const RaneItems: typeRaneItems[][] = [];
+  for (let i = 0; i < rane_num; i++) {
+    RaneItems.push([]);
   }
-  const RaneHeights = Array(rane_num).fill(0)
-  items.url.forEach((item: any, index: number)=>{
-    const minHeightIndex = searchMinHeightIndex(RaneHeights)
-    RaneHeights[minHeightIndex] += items.height[index]
-    RaneItems[minHeightIndex].push({url: item, source: items.source[index]})
-  })
-  console.log(RaneHeights)
-  return RaneItems
+  const RaneHeights = Array(rane_num).fill(0);
+  items.url.forEach((item: any, index: number) => {
+    const minHeightIndex = searchMinHeightIndex(RaneHeights);
+    RaneHeights[minHeightIndex] += items.height[index];
+    RaneItems[minHeightIndex].push({ url: item, source: items.source[index] });
+  });
+  console.log(RaneHeights);
+  return RaneItems;
 }
 
-function apitest(screen_name: string, max_id: string){
-  let endpoint = 'https://hr4ck7ers2.execute-api.ap-northeast-1.amazonaws.com/production/fav/' + screen_name
-  if (max_id){
-    endpoint += '/' + max_id
-  }
+function apitest(screen_name: string, max_id: string) {
+  let endpoint = `${process.env.REACT_APP_API_ENDPOINT_URL}/fav?name=${screen_name}&maxid=${max_id}`
+  console.log(endpoint)
   return new Promise((resolve, reject) => {
-    axios.get(endpoint).then((res) => {
-      resolve(res.data)
-    }).catch((err) => {
-      reject(err)
-    })
-  })
+    axios
+      .get(endpoint)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
